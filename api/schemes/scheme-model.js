@@ -16,7 +16,7 @@ async function findById(scheme_id) { // EXERCISE B
     .select('st.*', 'sc.scheme_name', 'sc.scheme_id as id')// SELECT st.*, sc.scheme_name FROM schemes as sc
     .where('sc.scheme_id', scheme_id)//WHERE sc.scheme_id = 1
     .orderBy('st.step_number');// ORDER BY st.step_number ASC;
-  const stepsMap = rows[0].step_id ? rows.map(item => {
+  const stepsMap = rows[0].step_id !== null ? rows.map(item => {
     return {
       step_id: item.step_id,
       step_number: item.step_number,
@@ -29,8 +29,8 @@ async function findById(scheme_id) { // EXERCISE B
     steps: stepsMap
   };
   return result;
-
 }
+
 
 async function findSteps(scheme_id) { // EXERCISE C
   const rows = await db('steps as st') // main table
@@ -46,31 +46,12 @@ async function findSteps(scheme_id) { // EXERCISE C
       scheme_name: item.scheme_name
     };
   });
-
   return result;
-  /*
-    1C- Build a query in Knex that returns the following data.
-    The steps should be sorted by step_number, and the array
-    should be empty if there are no steps for the scheme:
-
-      [
-        {
-          "step_id": 5,
-          "step_number": 1,
-          "instructions": "collect all the sheep in Scotland",
-          "scheme_name": "Get Rich Quick"
-        },
-        {
-          "step_id": 4,
-          "step_number": 2,
-          "instructions": "profit",
-          "scheme_name": "Get Rich Quick"
-        }
-      ]
-  */
 }
 
-function add(scheme) { // EXERCISE D
+async function add(scheme) { // EXERCISE D
+  const [id] = await db('schemes').insert(scheme);
+  return findById(id);
   /*
     1D- This function creates a new scheme and resolves to _the newly created scheme_.
   */
