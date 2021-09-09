@@ -49,21 +49,9 @@ const validateStep = (req, res, next) => {
     else {
       next();
     }
-
   } catch (err) {
     next(err);
   }
-
-  /*
-    If `instructions` is missing, empty string or not a string, or
-    if `step_number` is not a number or is smaller than one:
-  
-    status 400
-    {
-      "message": "invalid step"
-    }
-  */
-
 };
 
 module.exports = {

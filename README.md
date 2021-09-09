@@ -17,8 +17,8 @@ Open `api/schemes/scheme-router.js` and study the specification for each endpoin
 <!-- - `[GET] /api/schemes` -->
 <!-- - `[GET] /api/schemes/:scheme_id` -->
 <!-- - `[GET] /api/schemes/:scheme_id/steps` -->
-- `[POST] /api/schemes`
-- `[POST] /api/schemes/:scheme_id/steps`
+<!-- - `[POST] /api/schemes` -->
+<!-- - `[POST] /api/schemes/:scheme_id/steps` -->
 
 ### Middleware Functions
 
@@ -26,7 +26,7 @@ Write middleware functions in `api/schemes/scheme-middleware.js` following the i
 
 - [X] `checkSchemeId`
 - [X] `validateScheme`
-- [ ] `validateStep`
+- [X] `validateStep`
 
 ### Database Functions
 
@@ -36,7 +36,7 @@ Write db access functions in `api/schemes/scheme-model.js` following the instruc
 - [X] `findById`
 - [X] `findSteps`
 - [X] `add`
-- [ ] `addStep`
+- [X] `addStep`
 
 #### Schemes Schema
 

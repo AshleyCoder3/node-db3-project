@@ -1,21 +1,21 @@
 const db = require('../../data/db-config');
 
 async function find() {
-  const allTasks = await db('schemes as sc') // main table
-    .leftJoin('steps as st', 'sc.scheme_id', '=', 'st.scheme_id')//LEFT JOIN steps as st ON sc.scheme_id = st.scheme_id(choose 2nd table to add in)
-    .select('sc.*')// SELECT sc.*,FROM schemes as sc
-    .count('st.step_id as number_of_steps')//count(st.step_id) as number_of_steps
-    .groupBy('sc.scheme_id')//GROUP BY sc.scheme_id
-    .orderBy('sc.scheme_id');//ORDER BY sc.scheme_id ASC;
+  const allTasks = await db('schemes as sc')
+    .leftJoin('steps as st', 'sc.scheme_id', '=', 'st.scheme_id')
+    .select('sc.*')
+    .count('st.step_id as number_of_steps')
+    .groupBy('sc.scheme_id')
+    .orderBy('sc.scheme_id');
   return allTasks;
 }
 
-async function findById(scheme_id) { // EXERCISE B
-  const rows = await db('schemes as sc') // main table
-    .leftJoin('steps as st', 'sc.scheme_id', '=', 'st.scheme_id')//LEFT JOIN steps as st ON sc.scheme_id = st.scheme_id(choose 2nd table to add in)
-    .select('st.*', 'sc.scheme_name', 'sc.scheme_id as id')// SELECT st.*, sc.scheme_name FROM schemes as sc
-    .where('sc.scheme_id', scheme_id)//WHERE sc.scheme_id = 1
-    .orderBy('st.step_number');// ORDER BY st.step_number ASC;
+async function findById(scheme_id) {
+  const rows = await db('schemes as sc')
+    .leftJoin('steps as st', 'sc.scheme_id', '=', 'st.scheme_id')
+    .select('st.*', 'sc.scheme_name', 'sc.scheme_id as id')
+    .where('sc.scheme_id', scheme_id)
+    .orderBy('st.step_number');
   const stepsMap = rows[0].step_id !== null ? rows.map(item => {
     return {
       step_id: item.step_id,
@@ -32,12 +32,12 @@ async function findById(scheme_id) { // EXERCISE B
 }
 
 
-async function findSteps(scheme_id) { // EXERCISE C
-  const rows = await db('steps as st') // main table
-    .leftJoin('schemes as sc', 'sc.scheme_id', '=', 'st.scheme_id')//LEFT JOIN steps as st ON sc.scheme_id = st.scheme_id(choose 2nd table to add in)
-    .select('st.*', 'sc.scheme_name', 'sc.scheme_id as id')// SELECT st.*, sc.scheme_name FROM schemes as sc
-    .where('sc.scheme_id', scheme_id)//WHERE sc.scheme_id = 1
-    .orderBy('st.step_number');// ORDER BY st.step_number ASC;
+async function findSteps(scheme_id) {
+  const rows = await db('steps as st')
+    .leftJoin('schemes as sc', 'sc.scheme_id', '=', 'st.scheme_id')
+    .select('st.*', 'sc.scheme_name', 'sc.scheme_id as id')
+    .where('sc.scheme_id', scheme_id)
+    .orderBy('st.step_number');
   const result = rows.map(item => {
     return {
       step_id: item.step_id,
@@ -55,18 +55,10 @@ async function add(scheme) {
 }
 
 async function addStep(scheme_id, step) {
-  await db("steps")
+  await db('steps')
     .insert({ ...step, scheme_id })
-    .where("scheme_id", scheme_id);
-
+    .where('scheme_id', scheme_id);
   return findSteps(scheme_id);
-
-  // EXERCISE E
-  /*
-    1E- This function adds a step to the scheme with the given `scheme_id`
-    and resolves to _all the steps_ belonging to the given `scheme_id`,
-    including the newly created one.
-  */
 }
 
 module.exports = {
