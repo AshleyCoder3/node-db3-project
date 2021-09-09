@@ -13,7 +13,7 @@ async function find() {
 async function findById(scheme_id) { // EXERCISE B
   const rows = await db('schemes as sc') // main table
     .leftJoin('steps as st', 'sc.scheme_id', '=', 'st.scheme_id')//LEFT JOIN steps as st ON sc.scheme_id = st.scheme_id(choose 2nd table to add in)
-    .select('st.*', 'sc.scheme_name')// SELECT st.*, sc.scheme_name FROM schemes as sc
+    .select('st.*', 'sc.scheme_name', 'sc.scheme_id as id')// SELECT st.*, sc.scheme_name FROM schemes as sc
     .where('sc.scheme_id', scheme_id)//WHERE sc.scheme_id = 1
     .orderBy('st.step_number');// ORDER BY st.step_number ASC;
   const stepsMap = rows[0].step_id ? rows.map(item => {
@@ -24,7 +24,7 @@ async function findById(scheme_id) { // EXERCISE B
     };
   }) : [];
   const result = {
-    scheme_id: rows[0].scheme_id,
+    scheme_id: rows[0].id,
     scheme_name: rows[0].scheme_name,
     steps: stepsMap
   };
