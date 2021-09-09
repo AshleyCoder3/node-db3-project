@@ -24,23 +24,30 @@ async function findById(scheme_id) { // EXERCISE B
     };
   }) : [];
   const result = {
-    scheme_id: rows[0].id,
+    scheme_id: rows[0].scheme_id || rows[0].id,
     scheme_name: rows[0].scheme_name,
     steps: stepsMap
   };
   return result;
-  /*
-    5B- This is what the result should look like _if there are no steps_ for a `scheme_id`:
 
-      {
-        "scheme_id": 7,
-        "scheme_name": "Have Fun!",
-        "steps": []
-      }
-  */
 }
 
-function findSteps(scheme_id) { // EXERCISE C
+async function findSteps(scheme_id) { // EXERCISE C
+  const rows = await db('steps as st') // main table
+    .leftJoin('schemes as sc', 'sc.scheme_id', '=', 'st.scheme_id')//LEFT JOIN steps as st ON sc.scheme_id = st.scheme_id(choose 2nd table to add in)
+    .select('st.*', 'sc.scheme_name', 'sc.scheme_id as id')// SELECT st.*, sc.scheme_name FROM schemes as sc
+    .where('sc.scheme_id', scheme_id)//WHERE sc.scheme_id = 1
+    .orderBy('st.step_number');// ORDER BY st.step_number ASC;
+  const result = rows.map(item => {
+    return {
+      step_id: item.step_id,
+      step_number: item.step_number,
+      instructions: item.instructions,
+      scheme_name: item.scheme_name
+    };
+  });
+
+  return result;
   /*
     1C- Build a query in Knex that returns the following data.
     The steps should be sorted by step_number, and the array
